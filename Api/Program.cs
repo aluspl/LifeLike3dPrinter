@@ -1,9 +1,18 @@
+using Database.Context;
+using Database.Extensions;
+using Database.Migration;
+using Printer.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// Database
+var connectionString = builder.Configuration.GetConnectionString(CommonConsts.ConnectionString);
+builder.Services.UseDatabase<EFContext, IMigrationsAssembly>(connectionString);
 
 var app = builder.Build();
 
@@ -37,8 +46,3 @@ app.MapGet("/weatherforecast", () =>
     .WithOpenApi();
 
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
