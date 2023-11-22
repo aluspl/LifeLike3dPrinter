@@ -1,0 +1,41 @@
+@Printer_HostAddress = http://localhost:5214
+
+### Add Filament
+
+POST {{Printer_HostAddress}}/Filament/Create
+Accept: application/json
+Content-Type: application/json
+
+{
+  "BrandName": "ESun",
+  "Color": "Black",
+  "Weight": 1000,
+  "PurchaseDate": "2023-11-21",
+  "Price": 20.99,
+  "FilamentType": "PLA",
+  "Material": "Matte"
+}
+
+> {%
+    if (response.status == 200) {
+        client.global.set("FilamentId", response.body.id);
+    }
+%}
+
+### Refill Filament
+POST {{Printer_HostAddress}}/Filament/Refill
+Accept: application/json
+Content-Type: application/json
+
+{
+    "Id": "{{FilamentId}}",
+    "Weight": 1000,
+    "PurchaseDate": "2023-11-21",
+    "Price": 20.99
+}
+
+> {%
+    if (response.status == 200) {
+        client.global.set("FilamentId", response.body.id);
+    }
+%}

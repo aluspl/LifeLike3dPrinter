@@ -9,7 +9,7 @@ services:
     image: api:latest
     build:
       context: .
-      dockerfile: ./Api/Dockerfile-Local
+      dockerfile: ./Api/Dockerfile
     depends_on:
       - db
     container_name: utm
