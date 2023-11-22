@@ -39,3 +39,14 @@ Content-Type: application/json
         client.global.set("FilamentId", response.body.id);
     }
 %}
+
+### Get Filament
+GET {{Printer_HostAddress}}/Filament?Id={{FilamentId}}
+Accept: application/json
+Content-Type: application/json
+
+> {%
+    if (response.status == 200) {
+        client.global.set("FilamentId", response.body.id);
+    }
+%}

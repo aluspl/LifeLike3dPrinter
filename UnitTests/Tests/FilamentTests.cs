@@ -18,7 +18,7 @@ public class FilamentTests
         var name= Guid.NewGuid().ToString();
         await using var host = await AlbaHost.For<Program>();
 
-        var tracked = await host.InvokeMessageAndWaitAsync(new CreateFilamentCommand(name, FilamentType.PLA,
+        var tracked = await host.InvokeMessageAndWaitAsync(new CreateFilament(name, FilamentType.PLA,
             MaterialType.Basic, "red", 1000, 20, DateTime.UtcNow));
         var result = tracked.FindSingleTrackedMessageOfType<FilamentCreated>()
             .ShouldNotBeNull();
@@ -39,7 +39,7 @@ public class FilamentTests
         {
             await host.Scenario(x =>
             {
-                var command = new CreateFilamentCommand(name, FilamentType.PLA, MaterialType.Basic, "red", 1000, 20, DateTime.UtcNow);
+                var command = new CreateFilament(name, FilamentType.PLA, MaterialType.Basic, "red", 1000, 20, DateTime.UtcNow);
                 x.Post.Json(command).ToUrl("/filament/create");
             });
         });
@@ -63,7 +63,7 @@ public class FilamentTests
         {
             await host.Scenario(x =>
             {
-                var command = new CreateFilamentCommand(name, FilamentType.PLA, MaterialType.Basic, "red", 1000, 20, DateTime.UtcNow);
+                var command = new CreateFilament(name, FilamentType.PLA, MaterialType.Basic, "red", 1000, 20, DateTime.UtcNow);
                 x.Post.Json(command).ToUrl("/filament/create");
                 x.StatusCodeShouldBe(200);
             });
