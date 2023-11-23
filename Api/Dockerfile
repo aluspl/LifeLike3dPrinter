@@ -5,16 +5,16 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
-COPY ["Api/Printer.csproj", "Printer/"]
-RUN dotnet restore "Printer/Printer.csproj"
+COPY ["Api/Api.csproj", "Api/"]
+RUN dotnet restore "Api/Api.csproj"
 COPY . .
-WORKDIR "/src/Printer"
-RUN dotnet build "Printer.csproj" -c Release -o /app/build
+WORKDIR "/src/Api"
+RUN dotnet build "Api.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "Printer.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "Api.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Printer.dll"]
+ENTRYPOINT ["dotnet", "Api.dll"]

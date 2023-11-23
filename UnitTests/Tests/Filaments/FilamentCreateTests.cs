@@ -17,6 +17,7 @@ public class FilamentCreateTests
     {
         var name= Guid.NewGuid().ToString();
         await using var host = await AlbaHost.For<Program>();
+        ClearDB(host);
 
         var tracked = await host.InvokeMessageAndWaitAsync(new CreateFilament(name, FilamentType.PLA,
             MaterialType.Basic, "red", 1000, 20, DateTime.UtcNow));
@@ -35,7 +36,8 @@ public class FilamentCreateTests
     {
         var name= Guid.NewGuid().ToString();
         await using var host = await AlbaHost.For<Program>();
-
+        ClearDB(host);
+        
         var tracked = await host.InvokeMessageAndWaitAsync(new CreateFilament(name, FilamentType.PLA,
             MaterialType.Basic, "red", 1000, 20, DateTime.UtcNow));
         var result = tracked.FindSingleTrackedMessageOfType<FilamentCreated>()
@@ -56,13 +58,13 @@ public class FilamentCreateTests
         response.updated.Value.Day.ShouldBe(DateTime.UtcNow.Day);
         response.weight.ShouldBe(2000);
     }
-    
-    
+
     [Fact]
     public async Task Should_Create_And_Use_Filament()
     {
         var name= Guid.NewGuid().ToString();
         await using var host = await AlbaHost.For<Program>();
+        ClearDB(host);
 
         var tracked = await host.InvokeMessageAndWaitAsync(new CreateFilament(name, FilamentType.PLA,
             MaterialType.Basic, "red", 1000, 20, DateTime.UtcNow));
@@ -83,5 +85,16 @@ public class FilamentCreateTests
         response.updated.ShouldNotBeNull();
         response.updated.Value.Day.ShouldBe(DateTime.UtcNow.Day);
         response.left.ShouldBe(0);
+    }
+    
+    private static void ClearDB(IAlbaHost host)
+    {
+        host.BeforeEachAsync(async (_) =>
+        {
+            await using var nested = host.Services.As<IContainer>().GetNestedContainer();
+            var context = nested.GetInstance<EFContext>();
+            context.Filaments.RemoveRange(context.Filaments);
+            await context.SaveChangesAsync();
+        });
     }
 }
