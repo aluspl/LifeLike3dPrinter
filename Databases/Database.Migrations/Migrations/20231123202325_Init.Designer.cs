@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Database.Migrations.Migrations
 {
     [DbContext(typeof(EFContext))]
-    [Migration("20231122213229_Init")]
+    [Migration("20231123202325_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -66,39 +66,6 @@ namespace Database.Migrations.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Filaments", (string)null);
-                });
-
-            modelBuilder.Entity("Domain.Filament.FilamentItem", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("Bought")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime>("Created")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("NOW()");
-
-                    b.Property<Guid>("FilamentId")
-                        .HasColumnType("uuid");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("numeric");
-
-                    b.Property<DateTime?>("Updated")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("NOW()");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("FilamentId");
-
-                    b.ToTable("FilamentItems", (string)null);
                 });
 
             modelBuilder.Entity("Wolverine.EntityFrameworkCore.Internals.IncomingMessage", b =>
@@ -193,18 +160,61 @@ namespace Database.Migrations.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Domain.Filament.FilamentItem", b =>
-                {
-                    b.HasOne("Domain.Filament.Filament", null)
-                        .WithMany("Items")
-                        .HasForeignKey("FilamentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Domain.Filament.Filament", b =>
                 {
+                    b.OwnsMany("Domain.Filament.FilamentItem", "Items", b1 =>
+                        {
+                            b1.Property<Guid>("FilamentId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("integer");
+
+                            b1.Property<DateTime>("Bought")
+                                .HasColumnType("timestamp with time zone");
+
+                            b1.Property<decimal>("Price")
+                                .HasColumnType("numeric");
+
+                            b1.HasKey("FilamentId", "Id");
+
+                            b1.ToTable("Filaments");
+
+                            b1.ToJson("Items");
+
+                            b1.WithOwner()
+                                .HasForeignKey("FilamentId");
+                        });
+
+                    b.OwnsMany("Domain.Filament.FilamentUsedItem", "UsedItems", b1 =>
+                        {
+                            b1.Property<Guid>("FilamentId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("integer");
+
+                            b1.Property<DateTime>("UsedDate")
+                                .HasColumnType("timestamp with time zone");
+
+                            b1.Property<int>("Weight")
+                                .HasColumnType("integer");
+
+                            b1.HasKey("FilamentId", "Id");
+
+                            b1.ToTable("Filaments");
+
+                            b1.ToJson("UsedItems");
+
+                            b1.WithOwner()
+                                .HasForeignKey("FilamentId");
+                        });
+
                     b.Navigation("Items");
+
+                    b.Navigation("UsedItems");
                 });
 #pragma warning restore 612, 618
         }

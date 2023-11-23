@@ -5,7 +5,7 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
-COPY ["Printer/Printer.csproj", "Printer/"]
+COPY ["Api/Printer.csproj", "Printer/"]
 RUN dotnet restore "Printer/Printer.csproj"
 COPY . .
 WORKDIR "/src/Printer"

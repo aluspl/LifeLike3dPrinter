@@ -8,10 +8,9 @@ using Wolverine.Attributes;
 namespace PrinterService.Handlers;
 
 [WolverineHandler]
-public class FilamentHandlers
+public static class FilamentHandlers
 {
-    public async Task<FilamentCreated> HandleAsync(CreateFilament command, IRepository<Filament> repository,
-        ILogger<FilamentHandlers> logger)
+    public static async Task<FilamentCreated> HandleAsync(CreateFilament command, IRepository<Filament> repository, ILogger logger)
     {
         var filament = await repository.FirstOrDefaultAsync(x =>
             x.Brand == command.brandName && x.Color == command.color && x.FilamentType == command.filamentType &&
@@ -29,53 +28,25 @@ public class FilamentHandlers
         return new FilamentCreated(filament.Id);
     }
 
-    public async Task<FilamentRefilled> HandleAsync(RefillFilament command, IRepository<Filament> repository,
-        ILogger<FilamentHandlers> logger)
+    public static async Task<FilamentRefilled> HandleAsync(RefillFilament command, IRepository<Filament> repository, ILogger logger)
     {
-        var filament = await repository.FirstOrDefaultAsync(x => x.Id == command.Id);
-        if (filament == null)
-        {
-            throw new NotFoundException("Filament not found");
-        }
-
+        var filament = await repository.FirstOrDefaultAsync(x => x.Id == command.Id) ?? throw new NotFoundException("Filament not found");
         filament.Refill(command.weight, command.price, command.purchaseDate.ToUniversalTime());
 
         await repository.UpdateAsync(filament);
         logger.LogInformation("Filament refilled {@command}", command);
-        return new FilamentRefilled(filament.Id, filament.Updated);
+        return new FilamentRefilled(filament.Id, filament.Updated, filament.Weight);
     }
-
-    public async Task<FilamentModel> LoadAsync(QueryFilament command, IRepository<Filament> repository)
+    
+    public static async Task<FilamentUsed> HandleAsync(UseFilament command, IRepository<Filament> repository, ILogger logger)
     {
-        var filament = await repository.FirstOrDefaultAsync(x => x.Id == command.id);
-        if (filament == null)
-        {
-            throw new NotFoundException("Filament not found");
-        }
+        var filament = await repository.FirstOrDefaultAsync(x => x.Id == command.id) ??
+                       throw new NotFoundException("Filament not found");
 
-        return new FilamentModel(
-            filament.Id,
-            filament.Updated,
-            filament.FilamentType,
-            filament.MaterialType,
-            filament.Brand,
-            filament.Color,
-            filament.Weight,
-            filament.Used);
-    }
+        filament.Use(command.weight, command.usedDate);
 
-    public async Task<IEnumerable<FilamentModel>> LoadAsync(QueryFilaments command, IRepository<Filament> repository)
-    {
-        var filaments = await repository.ListAsync(x => command.created < x.Created);
-        return filaments.Select(filament =>
-            new FilamentModel(
-                filament.Id,
-                filament.Updated,
-                filament.FilamentType,
-                filament.MaterialType,
-                filament.Brand,
-                filament.Color,
-                filament.Weight,
-                filament.Used));
+        await repository.UpdateAsync(filament);
+        logger.LogInformation("Filament Used {@command}", command);
+        return new FilamentUsed(filament.Id, filament.Updated, filament.Left);
     }
 }

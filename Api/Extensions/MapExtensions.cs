@@ -24,23 +24,39 @@ public static class MapExtensions
             })
             .WithName("RefillFilament")
             .WithOpenApi();
-        //
-        // endpoints.MapGet("/filament", async ([FromQuery]QueryFilament request, [FromServices]IMessageBus bus) =>
-        //     {
-        //         var filament = await bus.InvokeAsync<FilamentModel>(request);
-        //         return filament;
-        //     })
-        //     .WithName("GetFilament")
-        //     .WithOpenApi();
-        //
-        // endpoints.MapGet("/filament/list", async ([FromQuery]QueryFilaments request, [FromServices]IMessageBus bus) =>
-        //     {
-        //         var filament = await bus.InvokeAsync<IEnumerable<FilamentModel>>(request);
-        //         return filament;
-        //     })
-        //     .WithName("GetFilaments")
-        //     .WithOpenApi();
-        //
+        
+        endpoints.MapPost("/filament/use", async ([FromBody] UseFilament request, [FromServices]IMessageBus bus) =>
+            {
+                var filament = await bus.InvokeAsync<FilamentUsed>(request);
+                return filament;
+            })
+            .WithName("UseFilament")
+            .WithOpenApi();
+
+        endpoints.MapGet("/filament/{id}", async (Guid id, [FromServices]IMessageBus bus) =>
+            {
+                var filament = await bus.InvokeAsync<FilamentModel>(new QueryFilamentItem(id));
+                return filament;
+            })
+            .WithName("GetFilament")
+            .WithOpenApi();
+        
+        endpoints.MapGet("/filament/list", async ([FromServices]IMessageBus bus) =>
+            {
+                var filament = await bus.InvokeAsync<IEnumerable<FilamentModel>>(new QueryFilamentList(true));
+                return filament;
+            })
+            .WithName("GetFilaments")
+            .WithOpenApi();
+        
+        endpoints.MapGet("/filament/list/all", async ([FromServices]IMessageBus bus) =>
+            {
+                var filament = await bus.InvokeAsync<IEnumerable<FilamentModel>>(new QueryFilamentList(false));
+                return filament;
+            })
+            .WithName("GetAllFilaments")
+            .WithOpenApi();
+
         return endpoints;
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace Domain.Filament;
 
-public class FilamentItem : IBaseEntity
+public class FilamentItem
 {
     public FilamentItem()
     {
@@ -12,15 +12,7 @@ public class FilamentItem : IBaseEntity
         Bought = purchaseDate;
     }
 
-    public Guid Id { get; set; }
-    
-    public DateTime? Updated { get; set; }
-
-    public DateTime Created { get; set; }
-    
     public DateTime Bought { get; set; }
     
     public decimal Price { get; set; }
-    
-    public Guid FilamentId { get; set; }
 }

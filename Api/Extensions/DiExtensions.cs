@@ -39,7 +39,7 @@ public static class DiExtensions
 
         services.AddScoped<DbContext, EFContext>();
         services.RegisterRepositories();
-        
+
         return services;
     }
 }

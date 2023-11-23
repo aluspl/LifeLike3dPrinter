@@ -26,6 +26,14 @@ public class FilamentConfiguration : IEntityTypeConfiguration<Filament>
         builder.Property(x => x.Brand).IsRequired();
         builder.Property(x => x.Color).IsRequired();
         builder.Property(x => x.FilamentType).IsRequired();
-        builder.HasMany(x => x.Items).WithOne().HasForeignKey(x => x.FilamentId);
+        builder.OwnsMany(c => c.Items, d =>
+        {
+            d.ToJson();
+        });
+        
+        builder.OwnsMany(c => c.UsedItems, d =>
+        {
+            d.ToJson();
+        });
     }
 }

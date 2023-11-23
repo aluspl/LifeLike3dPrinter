@@ -5,9 +5,9 @@ using PrinterService.Models.Filament;
 
 namespace UnitTests.Tests;
 
-public class FilamentTests
+public class FilamentAccessTests
 {
-    public FilamentTests()
+    public FilamentAccessTests()
     {
         OaktonEnvironment.AutoStartHost = true;
     }

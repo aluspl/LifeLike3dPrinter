@@ -7,8 +7,9 @@ namespace Database.Infrastructure.Seeding;
 
 public class DatabaseInitializer(EFContext context, IConfiguration configuration) : IHostedService
 {
-    public async Task InitializeAsync()
+    private async Task InitializeAsync()
     {
+        await context.Database.EnsureCreatedAsync();
         await context.Database.MigrateAsync();
         await context.SaveChangesAsync();
     }
