@@ -7,11 +7,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Commons\Commons.csproj" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.0" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Npgsql" Version="8.0.0" />
+      <ProjectReference Include="..\Database.Infrastructure\Database.Infrastructure.csproj" />
     </ItemGroup>
 
 </Project>

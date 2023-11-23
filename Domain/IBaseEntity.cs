@@ -2,5 +2,9 @@ namespace Domain;
 
 public interface IBaseEntity
 {
-    DateTime Updated { get; set; }
+    public Guid Id { get; set; }
+    
+    public DateTime? Updated { get; set; }
+
+    public DateTime Created { get; set; }
 }
