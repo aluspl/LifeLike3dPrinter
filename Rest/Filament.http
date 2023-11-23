@@ -40,6 +40,22 @@ Content-Type: application/json
     }
 %}
 
+### Use Filament
+POST {{Printer_HostAddress}}/Filament/Use
+Accept: application/json
+Content-Type: application/json
+
+{
+    "Id": "{{FilamentId}}",
+    "Weight": 1000,
+}
+
+> {%
+    if (response.status == 200) {
+        client.global.set("FilamentId", response.body.id);
+    }
+%}
+
 ### Get Filament
 GET {{Printer_HostAddress}}/Filament?Id={{FilamentId}}
 Accept: application/json

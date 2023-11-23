@@ -1,8 +1,6 @@
 ﻿using System.Linq.Expressions;
-using Commons.Exceptions;
 using Database.Infrastructure.Repositories.Interfaces;
 using Domain.Filament;
-using Microsoft.Extensions.Logging;
 using PrinterService.Extensions;
 using PrinterService.Models.Filament;
 using Wolverine.Attributes;
@@ -33,17 +31,13 @@ public static class FilamentQueryHandlers
 
     private static Expression<Func<Filament, bool>> BuildQuery(QueryFilamentList command)
     {
-        Expression<Func<Filament, bool>> query;
+        Expression<Func<Filament, bool>> query = x => true;
 
         if (command.active)
         {
             query = x => x.Weight - x.Used > 0;
         }
-        else
-        {
-            query = x => true;
-        }
-
+        
         return query;
     }
 }

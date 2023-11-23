@@ -9,4 +9,4 @@ public record RefillFilament(Guid Id, int weight, decimal price, DateTime purcha
 
 public record QueryFilamentItem(Guid id);
 
-public record QueryFilamentList(bool active);
+public record QueryFilamentList(bool active = true, FilamentType? filamentType = null);

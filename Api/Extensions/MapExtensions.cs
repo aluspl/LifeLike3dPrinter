@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using PrinterService.Handlers;
+﻿using Commons.Enums;
+using Microsoft.AspNetCore.Mvc;
 using PrinterService.Models.Filament;
 using Wolverine;
 
@@ -43,7 +43,7 @@ public static class MapExtensions
         
         endpoints.MapGet("/filament/list", async ([FromServices]IMessageBus bus) =>
             {
-                var filament = await bus.InvokeAsync<IEnumerable<FilamentModel>>(new QueryFilamentList(true));
+                var filament = await bus.InvokeAsync<IEnumerable<FilamentModel>>(new QueryFilamentList());
                 return filament;
             })
             .WithName("GetFilaments")
@@ -55,6 +55,14 @@ public static class MapExtensions
                 return filament;
             })
             .WithName("GetAllFilaments")
+            .WithOpenApi();
+        
+        endpoints.MapGet("/filament/list/type", async (FilamentType filamentType, [FromServices]IMessageBus bus) =>
+            {
+                var filament = await bus.InvokeAsync<IEnumerable<FilamentModel>>(new QueryFilamentList(true, filamentType));
+                return filament;
+            })
+            .WithName("GetFilamentsByType")
             .WithOpenApi();
 
         return endpoints;
