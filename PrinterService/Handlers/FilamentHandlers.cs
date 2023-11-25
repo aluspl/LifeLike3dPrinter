@@ -43,7 +43,7 @@ public static class FilamentHandlers
         var filament = await repository.FirstOrDefaultAsync(x => x.Id == command.id) ??
                        throw new NotFoundException("Filament not found");
 
-        filament.Use(command.weight, command.usedDate);
+        filament.Use(command.weight, command.orderId);
 
         await repository.UpdateAsync(filament);
         logger.LogInformation("Filament Used {@command}", command);
