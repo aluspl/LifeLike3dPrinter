@@ -31,4 +31,16 @@ public static class OrderHandlers
         logger.LogInformation("Order updated {@command}", command);
         return new OrderUpdated(order.Id, order.Updated);
     }
+    
+    public static async Task<FilamentAddedToOrder> HandleAsync(AddFilamentToOrder command, IRepository<Order> repository,
+        ILogger logger)
+    {
+        var order = await repository.FirstOrDefaultAsync(x => x.Id == command.orderId) ??
+                    throw new NotFoundException("Order not found");
+
+        order.AddFilament(command.filamentId, command.weight);
+        await repository.UpdateAsync(order);
+        logger.LogInformation("Order updated {@command}", command);
+        return new FilamentAddedToOrder(order.Id, order.Updated);
+    }
 }

@@ -77,6 +77,12 @@ public static class MapExtensions
         endpoints.MapPost("/order/create", async ([FromBody] CreateOrder request, [FromServices] IMessageBus bus) =>
             {
                 var orderCreated = await bus.InvokeAsync<OrderCreated>(request);
+                foreach (var requestFilament in request.filaments)
+                {
+                    
+                    await bus.InvokeAsync<FilamentUsed>(new UseFilament(requestFilament.id, requestFilament.weight,
+                        orderCreated.id));
+                }
                 return orderCreated;
             })
             .WithName("CreateFilament")

@@ -33,10 +33,9 @@ public class Order : IBaseEntity
     
     public List<FilamentOrderedItem> OrderedItems { get; set; }
     
-    public void AddFilament(Guid filamentId, int weight, DateTime? orderTime)
+    public void AddFilament(Guid filamentId, int weight)
     {
-        var orderedTime = orderTime?? DateTime.UtcNow;
-        OrderedItems.Add(new FilamentOrderedItem(filamentId, weight, orderedTime));
+        OrderedItems.Add(new FilamentOrderedItem(filamentId, weight));
     }
 
     public void Update(decimal price, decimal cost)
