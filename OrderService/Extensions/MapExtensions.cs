@@ -7,13 +7,15 @@ public static class MapExtensions
 {
     public static OrderModel Map(this Order filament)
     {
-        return new OrderModel(
-            filament.Id,
-            filament.Created,
-            filament.Updated,
-            filament.Price,
-            filament.Status,
-            filament.Filename,
-            filament.FileUrl);
+        return new OrderModel()
+        {
+            Id = filament.Id,
+            Updated = filament.Updated,
+            Created = filament.Created,
+            FileUrl = filament.FileUrl,
+            Status = filament.Status,
+            Price = filament.Price,
+            Filename = filament.Filename
+        };
     }
 }
