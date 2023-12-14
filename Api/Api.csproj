@@ -36,6 +36,7 @@
       <ProjectReference Include="..\Commons\Commons.csproj" />
       <ProjectReference Include="..\Databases\Database.Migrations\Database.Migrations.csproj" />
       <ProjectReference Include="..\Databases\Database.Infrastructure\Database.Infrastructure.csproj" />
+      <ProjectReference Include="..\OrderService\OrderService.csproj" />
       <ProjectReference Include="..\PrinterService\PrinterService.csproj" />
     </ItemGroup>
 

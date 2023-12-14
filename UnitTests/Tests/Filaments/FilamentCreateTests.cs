@@ -77,7 +77,7 @@ public class FilamentCreateTests
         var item = await context.Filaments.FirstOrDefaultAsync(x => x.Id == result.Id);
         item.ShouldNotBeNull();
         
-        tracked = await host.InvokeMessageAndWaitAsync(new UseFilament(result.Id, 1000, DateTime.UtcNow));
+        tracked = await host.InvokeMessageAndWaitAsync(new UseFilament(result.Id, 1000, Guid.NewGuid()));
         var response = tracked.FindSingleTrackedMessageOfType<FilamentUsed>()
             .ShouldNotBeNull();
         

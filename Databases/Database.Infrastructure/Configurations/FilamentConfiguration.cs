@@ -31,7 +31,7 @@ public class FilamentConfiguration : IEntityTypeConfiguration<Filament>
             d.ToJson();
         });
         
-        builder.OwnsMany(c => c.UsedItems, d =>
+        builder.OwnsMany(c => c.Orders, d =>
         {
             d.ToJson();
         });

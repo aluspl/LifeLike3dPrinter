@@ -28,5 +28,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.MapPrinterActions();
+app.MapFilamentActions();
+app.MapOrderActions();
+
 await app.RunOaktonCommands(args);

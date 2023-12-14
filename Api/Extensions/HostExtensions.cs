@@ -1,4 +1,5 @@
 ﻿using Oakton.Resources;
+using OrderService;
 using PrinterService;
 using Wolverine;
 using Wolverine.EntityFrameworkCore;
@@ -19,6 +20,8 @@ public static class HostExtensions
             options.UseFluentValidation();
 
             options.Discovery.IncludeAssembly(typeof(IPrinterAssembly).Assembly);
+            options.Discovery.IncludeAssembly(typeof(IOrderAssembly).Assembly);
+            
             options.Policies.UseDurableLocalQueues();
 
         });

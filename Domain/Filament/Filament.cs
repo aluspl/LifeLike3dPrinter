@@ -34,11 +34,10 @@ public class Filament : IBaseEntity
     
     public int Used { get; set; }
     
-    public List<FilamentItem> Items { get; set; }
-
-    public List<FilamentUsedItem> UsedItems { get; set; }
+    public ICollection<FilamentItem> Items { get; set; }
 
     public int Left => Weight - Used;
+    public ICollection<FilamentOrderItem> Orders { get; set; }
 
     public void Refill(int weight, decimal price, DateTime purchaseDate)
     {
@@ -48,12 +47,11 @@ public class Filament : IBaseEntity
         Items.Add(new FilamentItem(price, purchaseDate));
     }
 
-    public void Use(int weight, DateTime? usedDate)
+    public void Use(int weight, Guid orderId)
     {
         Used += weight;
-        usedDate ??= DateTime.UtcNow;
         
-        UsedItems ??= new List<FilamentUsedItem>();
-        UsedItems.Add(new FilamentUsedItem(weight, usedDate.Value));
+        Orders ??= new List<FilamentOrderItem>();
+        Orders.Add(new FilamentOrderItem(orderId, weight));
     }
 }
